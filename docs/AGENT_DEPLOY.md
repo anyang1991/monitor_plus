@@ -30,14 +30,21 @@ schtasks /Query /TN MonitorPlusAgent   # 守护任务状态
 - Python 3.7+（仅标准库）
 - NVIDIA GPU 监控需要 `nvidia-smi`（随驱动安装）；没有 GPU 也能跑，GPU 字段返回空
 
-## 快速部署
+## Linux 快速部署
+
+先在下载了项目的电脑上上传文件，将 `user@server` 换成自己的 SSH 登录目标：
+
+```bash
+scp agent/agent.py agent/monitor-agent.service user@server:/tmp/
+ssh user@server
+```
+
+再在服务器上安装并启动服务：
 
 ```bash
 # 在服务器上
 sudo mkdir -p /opt/monitor-agent
-sudo scp agent.py user@server:/tmp/   # 或直接 scp agent/agent.py user@server:/tmp/
 sudo mv /tmp/agent.py /opt/monitor-agent/
-sudo scp monitor-agent.service user@server:/tmp/
 sudo mv /tmp/monitor-agent.service /etc/systemd/system/
 sudo systemctl daemon-reload
 sudo systemctl enable --now monitor-agent
@@ -66,17 +73,17 @@ curl http://127.0.0.1:9101/metrics
 
 ## 安全建议
 
-Agent 无鉴权默认暴露主机负载数据（不含敏感内容，但会暴露主机名/硬件信息）。按暴露面选择：
+Agent 默认公开主机负载、主机名和硬件信息，访问令牌默认未启用。请按网络范围配置访问：
 
 1. **纯内网**：保持默认即可，或开 `--token`
-2. **跨公网**：强烈建议二选一
+2. **跨公网**：通过 VPN、SSH 隧道或 HTTPS 反向代理连接，并配置访问限制：
    - **防火墙白名单**：只放行运行 Monitor Plus 的机器：
      ```bash
      iptables -A INPUT -p tcp --dport 9101 -s <你的IP> -j ACCEPT
      iptables -A INPUT -p tcp --dport 9101 -j DROP
      ```
      云服务器用安全组配置更简单
-   - **令牌**：`--token <随机串>`，桌面端配置里填同样令牌
+   - **令牌**：`--token <随机串>`，桌面端配置里填同样令牌。HTTP 上的令牌不提供传输加密。
 3. 不要把 9101 端口暴露到公网且不加任何限制
 
 ## 故障排查

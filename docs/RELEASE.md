@@ -1,40 +1,60 @@
-# 发布与一键更新
+# 发布与应用更新
 
-Monitor Plus 采用「清单 + 安装包进仓库」的自更新方案：安装包和版本清单（`updates/latest.json`）提交到 GitLab 仓库，已安装的旧版本在小窗设置里点「检查更新 → 下载并安装」即可完成升级（自动退出 → 静默安装 → 手动重新打开）。
+Monitor Plus 使用「版本清单 + 安装包」检查与安装更新。公开发行使用 GitHub Releases；自建 GitLab 通道可以在应用设置中配置。
 
-## 发布新版本
+## 使用公开更新通道
 
-**Windows（主平台）**：
+在「设置 → 应用更新」填写下面的清单地址，访问令牌留空。保存后重新打开设置并检查更新。
 
-```powershell
-powershell -File scripts\release.ps1 -Version 0.2.0 -Notes "修复xx，新增xx"
+```text
+https://github.com/anyang1991/monitor_plus/releases/latest/download/latest.json
 ```
 
-**macOS**：
+0.3.0 内置地址中的用户名尚未修正，需要手动填写上面的地址。0.2.x 的更新地址和令牌固定在旧程序中，请手动下载安装新版。
 
-```bash
-./scripts/release.sh 0.2.0 "修复xx，新增xx"
+## 发布到 GitHub Releases
+
+1. 同步 `package.json`、`src-tauri/Cargo.toml` 和 `src-tauri/tauri.conf.json` 的版本号。
+2. 运行 `pnpm install` 与 `pnpm tauri build`，确认构建成功。
+3. 从 `src-tauri/target/release/bundle/nsis/` 取出 Windows 安装包，使用 `MonitorPlus_<版本>_x64-setup.exe` 作为发布文件名。
+4. 以 [`updates/latest.example.json`](../updates/latest.example.json) 为基础创建 `latest.json`，填写版本、说明、安装包下载地址与实际字节大小。
+5. 在 GitHub 创建对应版本的 Release，并上传安装包和 `latest.json` 两个资产。
+6. 验证清单和安装包均能公开下载，再在旧版本的应用设置中检查更新。
+
+清单示例：
+
+```json
+{
+  "version": "0.3.0",
+  "notes": "本次更新说明",
+  "platforms": {
+    "windows-x86_64": {
+      "url": "https://github.com/anyang1991/monitor_plus/releases/download/v0.3.0/MonitorPlus_0.3.0_x64-setup.exe",
+      "size": 2328842
+    }
+  }
+}
 ```
 
-脚本自动完成：三处版本号同步（tauri.conf.json / Cargo.toml / package.json）→ `pnpm tauri build` → 安装包复制到 `updates/` → 生成/合并 `updates/latest.json` → git 提交推送。
+上例的字节大小对应当前 0.3.0 资产，发布新包时请替换。版本号使用 `x.y.z`；当前客户端按三个数字段比较版本。
 
-## 更新按钮如何工作
+`scripts/release.ps1` 和 `scripts/release.sh` 仍包含旧 GitLab 发布流程，尚未实现完整的 GitHub Release 资产上传。GitHub 发行请按上面的步骤操作。
 
-1. 应用 GET `https://github.com/anyang.1991/monitor_plus/-/raw/main/updates/latest.json`
-2. 比对 `version` 与当前版本（数值比较，高才提示）
-3. 用户点「下载并安装」→ 下载安装包（设置里有进度）→ 应用退出：
-   - **Windows**：2 秒后静默运行 NSIS 安装器（`/S`，安装到用户目录，无需管理员）
-   - **macOS**：解包 `.app.tar.gz` 覆盖现有 .app 并重新打开
-   - 开发模式（`tauri dev` 运行）不支持覆盖安装，会提示用 `git pull` 更新
+## 自建 GitLab 私有更新通道
 
-## 私有仓库的令牌
+将安装包和清单放入自己的私有通道。在应用「设置 → 应用更新」填写：
 
-仓库是私有的，清单与安装包走 **GitLab API raw 端点**（`/api/v4/projects/.../repository/files/.../raw`）。更新令牌已**内置在程序里**（`src-tauri/src/updater.rs` 的 `UPDATE_TOKEN` 常量，Project Access Token / `read_repository` / 2027-10-25 到期），无需在设置里填写；令牌轮换或过期时改常量后重新发版即可。
+- **清单地址**：GitLab Repository Files API 的 `latest.json` raw 地址。
+- **访问令牌**：有权读取目标文件的 Project / Personal Access Token。请确认该 GitLab 版本及令牌 scope 允许读取所使用的 API 端点。
 
-注意：Web 的 `/-/raw/...` 路由和 Deploy Token 都**不适用**（前者不认 PRIVATE-TOKEN，后者不支持 REST API）。
+应用将普通令牌通过 `PRIVATE-TOKEN` 请求头发送。包含 `:` 的值按 `用户名:令牌` 进行 Basic 认证；Deploy Token 对 GitLab REST API 的支持与普通访问令牌不同，不能直接等同使用。
 
-## 注意
+访问令牌属于客户端的本机配置，不写入公开源码、更新清单或安装包。Windows 配置文件位于 `%APPDATA%\com.monitorplus.app\config.json`。
 
-- 清单里没有当前平台的安装包时，检查更新会提示「尚未提供当前平台的安装包」，不会误装
-- 版本比较是数值型 semver（x.y.z），请保持 `x.y.z` 格式
-- 安装包直接提交进 git 仓库（每个版本 5–10MB），介意体积可定期清理 `updates/` 下的旧文件
+## 安装行为
+
+- **Windows**：下载安装包后退出应用，再启动 NSIS 静默安装；安装完成后可重新打开应用。
+- **macOS**：支持相应 `.app.tar.gz` 清单资产的解包安装流程；当前公开 Release 提供 Windows 包。
+- **Linux**：当前客户端尚未实现自动安装更新。
+
+客户端通过清单选择当前平台的资产；没有相应平台文件时会提示安装包未提供。发布前请验证真实下载地址与安装结果。

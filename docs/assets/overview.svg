@@ -1,0 +1,80 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="640" viewBox="0 0 1280 640" role="img" aria-labelledby="title desc">
+  <title id="title">Monitor Plus — 额度与算力，一眼掌握</title>
+  <desc id="desc">深色桌面悬浮窗与两行紧凑模式示意。GLM、Codex 和服务器指标均为演示数据。</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#101827"/><stop offset="1" stop-color="#080d15"/></linearGradient>
+    <radialGradient id="glow"><stop stop-color="#6264df" stop-opacity=".25"/><stop offset="1" stop-color="#6264df" stop-opacity="0"/></radialGradient>
+    <linearGradient id="purple"><stop stop-color="#7b7bff"/><stop offset="1" stop-color="#b6a1ff"/></linearGradient>
+    <linearGradient id="green"><stop stop-color="#49bb9b"/><stop offset="1" stop-color="#93e5c4"/></linearGradient>
+    <filter id="shadow" x="-30%" y="-20%" width="160%" height="160%"><feDropShadow dx="0" dy="16" stdDeviation="18" flood-color="#000000" flood-opacity=".35"/></filter>
+  </defs>
+  <rect width="1280" height="640" rx="24" fill="url(#bg)"/>
+  <ellipse cx="994" cy="263" rx="390" ry="350" fill="url(#glow)"/>
+  <g font-family="'Microsoft YaHei UI','Microsoft YaHei','Noto Sans CJK SC',sans-serif">
+    <g fill="#8090a8" font-size="13" letter-spacing="3"><text x="64" y="67">MONITOR PLUS</text></g>
+    <rect x="64" y="91" width="42" height="4" rx="2" fill="#8c89ff"/>
+    <text x="60" y="169" font-size="53" font-weight="700" fill="#f1f5ff">额度与算力，</text>
+    <text x="60" y="240" font-size="64" font-weight="700" fill="#aaa5ff">一眼掌握。</text>
+    <text x="64" y="290" font-size="22" fill="#b0bfd5">写代码，跑任务。关键状态留在桌面。</text>
+    <g font-size="16" fill="#cfdaef">
+      <rect x="64" y="327" width="154" height="42" rx="21" fill="#171f33" stroke="#303c56"/><text x="87" y="354">GLM / Codex</text>
+      <rect x="230" y="327" width="152" height="42" rx="21" fill="#171f33" stroke="#303c56"/><text x="255" y="354">多服务器监控</text>
+      <rect x="394" y="327" width="152" height="42" rx="21" fill="#171f33" stroke="#303c56"/><text x="418" y="354">置顶 · 可折叠</text>
+    </g>
+    <text x="64" y="423" fill="#71839f" font-size="13" letter-spacing="2">紧凑模式 · 关键数字随手看</text>
+    <g filter="url(#shadow)">
+      <rect x="64" y="442" width="626" height="96" rx="12" fill="#151b26" stroke="#303b51"/>
+      <line x1="82" y1="488" x2="672" y2="488" stroke="#293348"/>
+      <g font-size="15" font-weight="600">
+        <text x="84" y="472" fill="#9b9bff">GLM</text><text x="137" y="472" fill="#8392aa">5h</text><text x="162" y="472" fill="#84d3b3">24%</text>
+        <text x="218" y="472" fill="#8392aa">周</text><text x="243" y="472" fill="#84d3b3">46%</text>
+        <line x1="303" y1="455" x2="303" y2="476" stroke="#364158"/>
+        <text x="325" y="472" fill="#8cccb6">GPT</text><text x="374" y="472" fill="#8392aa">5h</text><text x="399" y="472" fill="#84d3b3">18%</text>
+        <text x="455" y="472" fill="#8392aa">周</text><text x="480" y="472" fill="#84d3b3">32%</text>
+        <path d="M647 473l6-6 6 6" fill="none" stroke="#9ba9be" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+        <circle cx="90" cy="514" r="4" fill="#79cfac"/>
+        <text x="104" y="519" fill="#d0d8e6">demo-server</text>
+        <text x="232" y="519" fill="#8798b1">CPU</text><text x="271" y="519" fill="#84d3b3">32%</text>
+        <text x="339" y="519" fill="#8798b1">GPU</text><text x="381" y="519" fill="#84d3b3">58%</text>
+        <text x="519" y="519" fill="#7890a7" font-size="13">在线 · 12 ms</text>
+      </g>
+    </g>
+    <g filter="url(#shadow)">
+      <rect x="764" y="54" width="386" height="518" rx="17" fill="#111720" stroke="#354158"/>
+      <path d="M781 54h352a17 17 0 0 1 17 17v31H764V71a17 17 0 0 1 17-17z" fill="#1b2331"/>
+      <text x="786" y="84" font-size="18" font-weight="700" fill="#dfe6f5">Monitor<tspan fill="#9c96ff">+</tspan></text>
+      <g stroke="#8c9cb4" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" fill="none">
+        <path d="M1040 76l6 6 6-6"/>
+        <circle cx="1080" cy="79" r="5"/><circle cx="1080" cy="79" r="1.5"/>
+        <path d="M1080 71v3m0 10v3m-8-8h3m10 0h3m-14-6 2 2m8 8 2 2m0-12-2 2m-8 8-2 2"/>
+        <path d="M1112 75l8 8m0-8-8 8"/>
+      </g>
+      <g font-size="13" fill="#8191a9">
+        <text x="787" y="133" fill="#aaa4ff" font-weight="700">GLM Coding Plan</text><text x="1083" y="133" fill="#b8b2ff">MAX</text>
+        <text x="787" y="164">5 小时限额</text><text x="1073" y="164" fill="#8bdbb8">24%</text>
+        <rect x="787" y="176" width="340" height="7" rx="3.5" fill="#253044"/><rect x="787" y="176" width="82" height="7" rx="3.5" fill="url(#purple)"/>
+        <text x="787" y="205" font-size="11" fill="#62768f">3 时 12 分后重置</text>
+        <text x="787" y="232">每周限额</text><text x="1073" y="232" fill="#8bdbb8">46%</text>
+        <rect x="787" y="244" width="340" height="7" rx="3.5" fill="#253044"/><rect x="787" y="244" width="156" height="7" rx="3.5" fill="url(#purple)"/>
+        <line x1="786" y1="272" x2="1128" y2="272" stroke="#273143"/>
+        <text x="787" y="298" fill="#89ceb4" font-weight="700">GPT Codex</text><text x="1084" y="298" fill="#a9c2b9">Plus</text>
+        <text x="787" y="325">5 小时限额</text><text x="1073" y="325" fill="#8bdbb8">18%</text>
+        <rect x="787" y="337" width="340" height="7" rx="3.5" fill="#253044"/><rect x="787" y="337" width="61" height="7" rx="3.5" fill="url(#green)"/>
+        <text x="787" y="370">每周限额</text><text x="1073" y="370" fill="#8bdbb8">32%</text>
+        <rect x="787" y="382" width="340" height="7" rx="3.5" fill="#253044"/><rect x="787" y="382" width="109" height="7" rx="3.5" fill="url(#green)"/>
+      </g>
+      <rect x="781" y="414" width="352" height="142" rx="9" fill="#19212d" stroke="#2b374b"/>
+      <circle cx="797" cy="439" r="4" fill="#7ad4aa"/>
+      <text x="809" y="444" font-size="13" font-weight="600" fill="#d7dfed">demo-server</text><text x="1087" y="444" font-size="11" fill="#7c92ad">12 ms</text>
+      <g font-size="12" fill="#8fa1bb">
+        <text x="794" y="471">CPU</text><rect x="838" y="463" width="209" height="6" rx="3" fill="#2a3546"/><rect x="838" y="463" width="67" height="6" rx="3" fill="#7ccbab"/><text x="1080" y="471" fill="#a0dcbc">32%</text>
+        <text x="794" y="495">内存</text><text x="1018" y="495" fill="#c0ccdd">10.2 / 64 GB</text>
+        <line x1="794" y1="507" x2="1120" y2="507" stroke="#2b3749"/>
+        <text x="794" y="530" fill="#bbc8de">NVIDIA RTX 4090</text><text x="1081" y="530" fill="#c6c68c">67°C</text>
+        <text x="794" y="548" font-size="10" fill="#7f97b3">利用率 58%   ·   显存 8.2 / 24 GB</text>
+      </g>
+    </g>
+    <text x="64" y="596" fill="#6c809c" font-size="13">Tauri 2 + Vue 3 + Rust</text>
+    <text x="1150" y="605" text-anchor="end" fill="#6c809c" font-size="12">界面示意 · 演示数据</text>
+  </g>
+</svg>

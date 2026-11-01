@@ -35,7 +35,7 @@ npm install -g pnpm
 ## 2. 构建
 
 ```powershell
-git clone https://github.com/anyang.1991/monitor_plus.git
+git clone https://github.com/anyang1991/monitor_plus.git
 cd monitor_plus
 pnpm install
 pnpm tauri build
@@ -43,10 +43,10 @@ pnpm tauri build
 
 产物在 `src-tauri\target\release\bundle\` 下：
 
-- `msi\Monitor Plus_0.1.0_x64_zh-CN.msi` — 安装包（推荐）
-- `nsis\Monitor Plus_0.1.0_x64-setup.exe` — NSIS 安装器
+- `msi\*.msi` — MSI 安装包
+- `nsis\*-setup.exe` — NSIS 安装器（GitHub Release 使用此格式）
 
-直接运行绿色版可执行文件：`src-tauri\target\release\Monitor Plus.exe`。
+直接运行构建后的可执行文件：`src-tauri\target\release\monitor-plus.exe`。
 
 ## 3. 开发调试
 
@@ -84,5 +84,5 @@ git-fetch-with-cli = true
 2. 点标题栏 ⚙ 进入设置：
    - **GLM**：默认自动读取本机 ZCode 凭据（需先在终端登录过 `zcode`）；也可手动粘贴 API Key；国内选 `bigmodel.cn`，走全球版选 `api.z.ai`
    - **服务器**：点"＋ 添加"，填名称与地址（如 `192.168.1.10:9101`），点"测试"验证
-3. 点 ⌄ 可折叠成单行迷你条，双击迷你条展开
+3. 点 ⌄ 可折叠成紧凑条，有服务器时显示第二行；双击紧凑条展开
 4. 点 ✕ 隐藏到托盘（不是退出），托盘右键可退出
