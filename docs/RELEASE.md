@@ -20,7 +20,7 @@ powershell -File scripts\release.ps1 -Version 0.2.0 -Notes "修复xx，新增xx"
 
 ## 更新按钮如何工作
 
-1. 应用 GET `https://github.com/YOUR_GITHUB_USERNAME/monitor_plus/-/raw/main/updates/latest.json`
+1. 应用 GET `https://github.com/anyang.1991/monitor_plus/-/raw/main/updates/latest.json`
 2. 比对 `version` 与当前版本（数值比较，高才提示）
 3. 用户点「下载并安装」→ 下载安装包（设置里有进度）→ 应用退出：
    - **Windows**：2 秒后静默运行 NSIS 安装器（`/S`，安装到用户目录，无需管理员）

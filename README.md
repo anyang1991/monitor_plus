@@ -39,6 +39,43 @@
 └─────────────────────────────┘
 ```
 
+## 更新通道配置
+
+应用内置的默认更新通道是 GitHub Releases 模式（把下面地址里的 `anyang.1991` 换成实际用户名后即可）：
+
+```
+https://github.com/anyang.1991/monitor_plus/releases/latest/download/latest.json
+```
+
+自建 GitLab 等私有通道、或想改用其他清单地址时，在应用「设置 → 应用更新」里填写**清单地址**与**访问令牌**；也可以把下面这段提示词直接交给你的 AI 编程助手（ZCode / Codex / Claude Code 等）代为配置：
+
+```text
+请帮我配置 Monitor Plus 桌面应用的自动更新通道。
+
+第 0 步：先彻底退出 Monitor Plus（系统托盘右键图标 → 退出），避免退出时用旧配置覆盖我们的修改。
+
+应用的配置文件是 JSON，位置：
+- Windows: %APPDATA%\com.monitorplus.app\config.json
+- macOS: ~/Library/Application Support/com.monitorplus.app/config.json
+- Linux: ~/.config/com.monitorplus.app/config.json
+
+请读取该文件（若不存在则创建一个空 JSON 对象再填），修改以下两个字段，其余字段原样保留：
+1. "update_manifest_url" 设置为：<更新清单 latest.json 的完整 URL>
+2. "update_token" 设置为：<访问令牌；公开仓库没有令牌就删除这个键>
+
+写回文件（UTF-8、2 空格缩进、chmod 600），然后告诉我写入了什么。
+最后提醒我：重新打开 Monitor Plus → 设置 → 应用更新 → 检查更新 验证通道是否生效。
+```
+
+字段说明：
+
+| 字段 | 说明 |
+|---|---|
+| `update_manifest_url` | 指向 `latest.json` 的完整地址；GitHub Releases 用户留空即用内置默认 |
+| `update_token` | 私有仓库的访问令牌（GitLab Project Access Token，`read_repository`）；公开仓库不需要 |
+
+修改后重新打开应用 → 设置 → 应用更新 → 检查更新，即可验证通道。
+
 ## 项目结构
 
 ```
