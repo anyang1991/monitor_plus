@@ -4,10 +4,10 @@ use std::time::Duration;
 use tauri::Emitter;
 
 /// 更新清单默认走 GitHub Releases 的 latest 资产模式（公开仓库无需令牌）：
-/// 把 YOUR_GITHUB_USERNAME 换成实际用户名，或在应用设置的「更新通道」里
+/// 把 anyang1991 换成实际用户名，或在应用设置的「更新通道」里
 /// 填入自定义清单地址（自建 GitLab 等私有通道）与访问令牌。
 pub const DEFAULT_MANIFEST_URL: &str =
-    "https://github.com/YOUR_GITHUB_USERNAME/monitor_plus/releases/latest/download/latest.json";
+    "https://github.com/anyang1991/monitor_plus/releases/latest/download/latest.json";
 
 #[derive(Clone, Serialize, Debug)]
 pub struct UpdateCheck {

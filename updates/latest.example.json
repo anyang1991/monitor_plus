@@ -4,7 +4,7 @@
   "notes": "版本说明",
   "platforms": {
     "windows-x86_64": {
-      "url": "https://github.com/YOUR_GITHUB_USERNAME/monitor_plus/releases/download/v0.3.0/MonitorPlus_0.3.0_x64-setup.exe",
+      "url": "https://github.com/anyang1991/monitor_plus/releases/download/v0.3.0/MonitorPlus_0.3.0_x64-setup.exe",
       "size": 0
     }
   }

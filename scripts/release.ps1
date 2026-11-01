@@ -49,7 +49,7 @@ if (Test-Path $manifestPath) {
 }
 # 更新通道：默认 GitHub Releases（公开）；私有通道用环境变量覆盖
 #   $env:RELEASE_BASE = "https://your.gitlab/api/v4/projects/ID/repository/files"  +  $env:RELEASE_TOKEN
-$base = if ($env:RELEASE_BASE) { $env:RELEASE_BASE } else { "https://github.com/YOUR_GITHUB_USERNAME/monitor_plus/releases/download/v$Version" }
+$base = if ($env:RELEASE_BASE) { $env:RELEASE_BASE } else { "https://github.com/anyang1991/monitor_plus/releases/download/v$Version" }
 $manifest.platforms["windows-x86_64"] = [ordered]@{
     url  = "$base/updates%2F$assetName/raw?ref=main"
     size = (Get-Item "updates\$assetName").Length

@@ -3,6 +3,7 @@ name = "monitor-plus"
 version = "0.3.0"
 description = "GLM Coding Plan & server CPU/GPU floating monitor widget"
 authors = ["Monitor Plus Contributors"]
+license = "MIT"
 edition = "2024"
 
 [lib]

@@ -35,7 +35,7 @@ npm install -g pnpm
 ## 2. 构建
 
 ```powershell
-git clone https://github.com/YOUR_GITHUB_USERNAME/monitor_plus.git
+git clone https://github.com/anyang1991/monitor_plus.git
 cd monitor_plus
 pnpm install
 pnpm tauri build
