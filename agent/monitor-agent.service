@@ -1,0 +1,19 @@
+[Unit]
+Description=Monitor Plus metrics agent (CPU/GPU)
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+# 如需访问令牌，在 ExecStart 追加 --token <令牌>（桌面端服务器配置里填同一令牌）
+ExecStart=/usr/bin/python3 /opt/monitor-agent/agent.py --bind 0.0.0.0 --port 9101
+Restart=always
+RestartSec=3
+# 只读文件系统 + 仅保留必要权限，安全兜底
+NoNewPrivileges=true
+ProtectSystem=strict
+ProtectHome=true
+PrivateTmp=true
+
+[Install]
+WantedBy=multi-user.target
