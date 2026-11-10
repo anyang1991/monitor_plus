@@ -24,7 +24,7 @@ import threading
 import time
 from http.server import BaseHTTPRequestHandler, HTTPServer
 
-__version__ = "0.1.1"
+__version__ = "0.1.2"
 
 # pythonw.exe（无窗口运行）下 stdout/stderr 为 None，print 会直接崩；
 # 统一重定向到 devnull，保证守护方式拉起时也能正常常驻
@@ -169,12 +169,20 @@ def sample_mem_windows():
 NVIDIA_FIELDS = ["index", "name", "utilization.gpu", "memory.used", "memory.total", "temperature.gpu"]
 
 
+def _subprocess_run(cmd, *, timeout):
+    """统一执行外部采集命令；pythonw 下绝不创建控制台窗口。"""
+    kwargs = {"capture_output": True, "text": True, "timeout": timeout}
+    if os.name == "nt":
+        kwargs["creationflags"] = subprocess.CREATE_NO_WINDOW
+    return subprocess.run(cmd, **kwargs)
+
+
 def sample_gpus():
     """调 nvidia-smi 查询 GPU；不可用时返回 []"""
     try:
-        out = subprocess.run(
+        out = _subprocess_run(
             ["nvidia-smi", f"--query-gpu={','.join(NVIDIA_FIELDS)}", "--format=csv,noheader,nounits"],
-            capture_output=True, text=True, timeout=5,
+            timeout=5,
         )
         if out.returncode != 0:
             return []
@@ -213,7 +221,7 @@ def get_hostname():
 
 def _run(cmd, timeout=5):
     try:
-        out = subprocess.run(cmd, capture_output=True, text=True, timeout=timeout)
+        out = _subprocess_run(cmd, timeout=timeout)
         return out.stdout if out.returncode == 0 else ""
     except (OSError, subprocess.SubprocessError):
         return ""
@@ -254,11 +262,16 @@ def sample_mem_macos():
     return round(used / 1024**3, 2), round(total / 1024**3, 2)
 
 
-def sampler_loop(interval):
+def sampler_loop(interval, stop_event=None):
+    """持续采样。
+
+    stop_event 仅供测试和嵌入方优雅停止；常规 Agent 进程保持默认 None，
+    由进程退出结束守护线程。
+    """
     import os
     is_linux = os.path.isfile("/proc/stat")
     is_windows = os.name == "nt"
-    while True:
+    while stop_event is None or not stop_event.is_set():
         started = time.time()
         try:
             if is_linux:
@@ -270,16 +283,25 @@ def sampler_loop(interval):
             else:
                 cores = sample_cpu_macos()
                 mem_used, mem_total = sample_mem_macos()
+            # nvidia-smi 可能在慢 GPU 上阻塞数秒，必须在共享锁外查询，
+            # 让 /metrics 随时立即返回上一次完整快照。
+            gpus = sample_gpus()
+            sampled_at_ms = int(time.time() * 1000)
             with _lock:
                 _cache["cpu_cores"] = cores
                 _cache["cpu_percent"] = round(sum(cores) / len(cores), 1) if cores else 0.0
                 _cache["mem_used_gb"], _cache["mem_total_gb"] = mem_used, mem_total
-                _cache["gpus"] = sample_gpus()
-                _cache["agent_ts_ms"] = int(started * 1000)
+                _cache["gpus"] = gpus
+                _cache["agent_ts_ms"] = sampled_at_ms
         except Exception as e:  # 采样失败不中断线程
             print(f"sampler error: {e}", flush=True)
         elapsed = time.time() - started
-        time.sleep(max(0.5, interval - elapsed))
+        delay = max(0.5, interval - elapsed)
+        # Event.wait 让测试可以在 patch 仍生效时及时停止采样线程。
+        if stop_event is None:
+            time.sleep(delay)
+        else:
+            stop_event.wait(delay)
 
 
 # ---------------- HTTP 服务 ----------------
@@ -317,7 +339,16 @@ class Handler(BaseHTTPRequestHandler):
 
 class Server(socketserver.ThreadingMixIn, HTTPServer):
     daemon_threads = True
-    allow_reuse_address = True
+
+    # Windows 的 SO_REUSEADDR 语义会允许多个 socket 绑定同一端口。
+    # 监听服务必须使用互斥绑定；Unix 上保留它主要用于 TIME_WAIT 后快速重启。
+    allow_reuse_address = os.name != "nt"
+
+    def server_bind(self):
+        if os.name == "nt":
+            # 必须在 bind 前设置。该选项阻止另一个进程抢占/重复绑定本端口。
+            self.socket.setsockopt(socket.SOL_SOCKET, socket.SO_EXCLUSIVEADDRUSE, 1)
+        super().server_bind()
 
 
 def main():

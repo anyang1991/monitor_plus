@@ -29,3 +29,5 @@ dist-ssr
 # 发布产物走 GitHub Releases / 私有通道，不入库
 updates/*.exe
 updates/latest.json
+
+__pycache__/
