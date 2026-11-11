@@ -128,3 +128,11 @@ ssh user@server "systemctl enable --now monitor-agent"
 ## 数据来源说明
 
 GLM 配额接口：`GET {base}/api/monitor/usage/quota/limit`，认证头为 `Authorization: <api-key>`（无 Bearer 前缀）。ZCode 凭据文件（`~/.zcode/v2/credentials.json`）中的 key 为 `enc:v1:` 加密格式，本应用按 ZCode CLI 相同的密钥派生逻辑（`zcode-credential-fallback:{platform}:{homedir}:{username}` → SHA-256 → AES-256-GCM）本地解密，凭据不出本机。
+
+Codex 重置追踪：轮询 [codex-reset.com](https://codex-reset.com) 的公共聚合接口（`GET /api/feed`），该源收录 Codex 负责人 @thsottiaux 的公开帖子。应用从中筛选未来日期的重置事件（精确倒计时），无确定日期但含预告措辞时显示低置信度预告，两者皆无显示"无计划"。
+
+## 致谢
+
+- [yurenpai/tibo-reset-live](https://github.com/yurenpai/tibo-reset-live)（MIT）—— Codex 重置官宣追踪的思路来源。本项目的重置追踪未使用其代码，但沿用了它默认的公共数据源（codex-reset.com）与"预告 / 确证 / 无计划"的分类展示概念
+- [codex-reset.com](https://codex-reset.com) —— @thsottiaux 帖子的公共聚合 feed，重置追踪的数据来源
+- [Tauri](https://tauri.app/)、[Vue](https://vuejs.org/)、[nvidia-smi](https://developer.nvidia.com/) 生态
